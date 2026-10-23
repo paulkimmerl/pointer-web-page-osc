@@ -1,57 +1,69 @@
-```html
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Pointer Test</title>
+<style>
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: black;
+  color: white;
+  font-family: sans-serif;
+  touch-action: none;
+}
+#info {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  pointer-events: none;
+}
+#dot {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ff0055;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+<div id="info">Finger gedrückt halten und bewegen</div>
+<div id="dot"></div>
 <script>
 const dot = document.getElementById("dot");
 const info = document.getElementById("info");
-
 let drawing = false;
-let lastX = 0;
-let lastY = 0;
 
-document.body.style.touchAction = "none";
-
-document.addEventListener("pointerdown", event => {
-    drawing = true;
-
-    lastX = event.clientX;
-    lastY = event.clientY;
-
-    dot.style.background = "#00ffaa";
-    dot.style.left = lastX + "px";
-    dot.style.top = lastY + "px";
-
-    // Neuen Strich beginnen
-    console.log("START", lastX, lastY);
+document.addEventListener("pointerdown", e => {
+  drawing = true;
+  dot.style.background = "#00ffaa";
+  move(e);
 });
 
-document.addEventListener("pointermove", event => {
-    if (!drawing) return;
-
-    const x = event.clientX;
-    const y = event.clientY;
-
-    dot.style.left = x + "px";
-    dot.style.top = y + "px";
-
-    info.textContent = `X: ${Math.round(x)} | Y: ${Math.round(y)}`;
-
-    // Jede Position während des Haltens
-    console.log("MOVE", x, y);
-
-    lastX = x;
-    lastY = y;
+document.addEventListener("pointermove", e => {
+  if (drawing) move(e);
 });
 
-function stopDrawing() {
-    if (!drawing) return;
-
-    drawing = false;
-    dot.style.background = "#ff0055";
-
-    // Strich beenden
-    console.log("END");
+function move(e) {
+  dot.style.left = e.clientX + "px";
+  dot.style.top = e.clientY + "px";
+  info.textContent = `X: ${Math.round(e.clientX)} | Y: ${Math.round(e.clientY)}`;
+  console.log("MOVE", e.clientX, e.clientY);
 }
 
-document.addEventListener("pointerup", stopDrawing);
-document.addEventListener("pointercancel", stopDrawing);
+function stop() {
+  drawing = false;
+  dot.style.background = "#ff0055";
+}
+
+document.addEventListener("pointerup", stop);
+document.addEventListener("pointercancel", stop);
 </script>
-```
+</body>
+</html>
