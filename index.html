@@ -1,69 +1,57 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+```html
+<script>
+const dot = document.getElementById("dot");
+const info = document.getElementById("info");
 
-    <title>Pointer Test</title>
+let drawing = false;
+let lastX = 0;
+let lastY = 0;
 
-    <style>
-        body {
-            margin: 0;
-            background: black;
-            color: white;
-            font-family: sans-serif;
-            overflow: hidden;
-        }
+document.body.style.touchAction = "none";
 
-        #info {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            font-size: 20px;
-        }
+document.addEventListener("pointerdown", event => {
+    drawing = true;
 
-        #dot {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background: #ff0055;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-        }
-    </style>
-</head>
+    lastX = event.clientX;
+    lastY = event.clientY;
 
-<body>
+    dot.style.background = "#00ffaa";
+    dot.style.left = lastX + "px";
+    dot.style.top = lastY + "px";
 
-    <div id="info">Bewege deinen Finger!</div>
-    <div id="dot"></div>
+    // Neuen Strich beginnen
+    console.log("START", lastX, lastY);
+});
 
-    <script>
-        const dot = document.getElementById("dot");
-        const info = document.getElementById("info");
+document.addEventListener("pointermove", event => {
+    if (!drawing) return;
 
-        document.addEventListener("pointermove", function(event) {
+    const x = event.clientX;
+    const y = event.clientY;
 
-            const x = event.clientX;
-            const y = event.clientY;
+    dot.style.left = x + "px";
+    dot.style.top = y + "px";
 
-            dot.style.left = x + "px";
-            dot.style.top = y + "px";
+    info.textContent = `X: ${Math.round(x)} | Y: ${Math.round(y)}`;
 
-            info.textContent =
-                "X: " + Math.round(x) +
-                " | Y: " + Math.round(y);
-        });
+    // Jede Position während des Haltens
+    console.log("MOVE", x, y);
 
-        document.addEventListener("pointerdown", function(event) {
-            dot.style.background = "#00ffaa";
-        });
+    lastX = x;
+    lastY = y;
+});
 
-        document.addEventListener("pointerup", function(event) {
-            dot.style.background = "#ff0055";
-        });
-    </script>
+function stopDrawing() {
+    if (!drawing) return;
 
-</body>
-</html>
+    drawing = false;
+    dot.style.background = "#ff0055";
+
+    // Strich beenden
+    console.log("END");
+}
+
+document.addEventListener("pointerup", stopDrawing);
+document.addEventListener("pointercancel", stopDrawing);
+</script>
+```
