@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Pointer Test</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: black;
+            color: white;
+            font-family: sans-serif;
+            overflow: hidden;
+        }
+
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 20px;
+        }
+
+        #dot {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #ff0055;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="info">Bewege deinen Finger!</div>
+    <div id="dot"></div>
+
+    <script>
+        const dot = document.getElementById("dot");
+        const info = document.getElementById("info");
+
+        document.addEventListener("pointermove", function(event) {
+
+            const x = event.clientX;
+            const y = event.clientY;
+
+            dot.style.left = x + "px";
+            dot.style.top = y + "px";
+
+            info.textContent =
+                "X: " + Math.round(x) +
+                " | Y: " + Math.round(y);
+        });
+
+        document.addEventListener("pointerdown", function(event) {
+            dot.style.background = "#00ffaa";
+        });
+
+        document.addEventListener("pointerup", function(event) {
+            dot.style.background = "#ff0055";
+        });
+    </script>
+
+</body>
+</html>
